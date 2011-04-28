@@ -1,4 +1,4 @@
-=== url2link ===
+=== oEmbed Gist ===
 Contributors: miyauchi
 Donate link: http://firegoby.theta.ne.jp/
 Tags: url, link, oembed, visual editor, post, gist, github
