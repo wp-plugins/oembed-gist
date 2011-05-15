@@ -1,20 +1,26 @@
 === oEmbed Gist ===
 Contributors: miyauchi
-Donate link: http://firegoby.theta.ne.jp/
+Donate link: https://www.paypal.com/jp/cgi-bin/webscr?cmd=_flow&SESSION=V9ggRQYdPscPXHHzwIMAG2o2RavMQO8KLdFTxHm3dzuX2gDiDHw-k1ZBw5C&dispatch=50a222a57771920b6a3d7b606239e4d529b525e0b7e69bf0224adecfb0124e9b61f737ba21b0819838956b846fa597911f234fb937456ea7
 Tags: url, link, oembed, visual editor, post, gist, github
 Requires at least: 3.0
 Tested up to: 3.1
-Stable tag: 0.1.0
+Stable tag: 1.0.0
 
 Embed your source from gist into WordPress easily.
 
 == Description ==
 
-Embed your source from gist into WordPress easily.
-You simply paste URL of your Gist.
+* Embed your source from gist into WordPress easily.
+* You simply paste URL of your Gist.
 
+= Summary =
 
-= Support: =
+You can embed your program sources from gist simply paste URL like below.
+
+* https://gist.github.com/973153
+* https://gist.github.com/973153#file_select_media.html
+
+= Support =
 
 * [Plugin Homepage](http://firegoby.theta.ne.jp/wp/oembed-gist)
 * [Support](http://wordpress.org/tags/oembed-gist)
