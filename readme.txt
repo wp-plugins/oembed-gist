@@ -4,7 +4,7 @@ Donate link: https://www.paypal.com/jp/cgi-bin/webscr?cmd=_flow&SESSION=V9ggRQYd
 Tags: url, link, oembed, visual editor, post, gist, github
 Requires at least: 3.0
 Tested up to: 3.1
-Stable tag: 1.0.0
+Stable tag: 1.1.0
 
 Embed your source from gist into WordPress easily.
 
@@ -40,6 +40,9 @@ You can embed your program sources from gist simply paste URL like below.
 1. It just appears!
 
 == Changelog ==
+
+= 1.1.0 =
+* Add support NOSCRIPT
 
 = 0.1.0 =
 * The first release.

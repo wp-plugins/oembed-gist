@@ -4,7 +4,7 @@ Plugin Name: oEmbed gist
 Plugin URI: http://firegoby.theta.ne.jp/wp/oembed-gist
 Description: Embed source from gist.github.
 Author: Takayuki Miyauchi (THETA NETWORKS Co,.Ltd)
-Version: 1.0.0
+Version: 1.1.0
 Author URI: http://firegoby.theta.ne.jp/
 */
 
@@ -28,17 +28,27 @@ AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
-*/
 
+Modified August 18, 2011 by Alex King (alexking.org) to add NOSCRIPT and i18n support
+
+*/
 
 new gist();
 
 class gist {
 
-    private $html = '<script src="https://gist.github.com/%s.js%s"></script>';
+    private $noscript;
+    private $html = '<script src="https://gist.github.com/%s.js%s"></script><noscript>%s</noscript>';
 
     function __construct()
     {
+        load_plugin_textdomain(
+            'oembed-gist',
+            PLUGINDIR.'/'.dirname(plugin_basename(__FILE__)).'/langs',
+            dirname(plugin_basename(__FILE__)).'/langs'
+        );
+
+        $this->noscript = __('<p>View the code on <a href="https://gist.github.com/%s">Gist</a>.</p>', 'oembed-gist');
         wp_embed_register_handler(
             'gist',
             '#https://gist.github.com/([0-9]+)(\#file_(.+))?#i',
@@ -59,10 +69,11 @@ class gist {
     public function shortcode($p)
     {
         if (preg_match("/^[0-9]+$/", $p['id'])) {
+            $noscript = sprintf($this->noscript, $p['id']);
             if ($p['file']) {
-                return sprintf($this->html, $p['id'], '?file='.$p['file']);
+                return sprintf($this->html, $p['id'], '?file='.$p['file'], $noscript);
             } else {
-                return sprintf($this->html, $p['id'], '');
+                return sprintf($this->html, $p['id'], '', $noscript);
             }
         }
     }
@@ -71,7 +82,7 @@ class gist {
     {
         $pname = plugin_basename(__FILE__);
         if ($pname === $file) {
-            $links[] = '<a href="http://firegoby.theta.ne.jp/pfj/">Pray for Japan</a>';
+            $links[] = '<a href="http://firegoby.theta.ne.jp/pfj/">'.__('Pray for Japan', 'oembed-gist').'</a>';
         }
         return $links;
     }
