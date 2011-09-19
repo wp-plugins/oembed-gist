@@ -4,7 +4,7 @@ Plugin Name: oEmbed gist
 Plugin URI: http://firegoby.theta.ne.jp/wp/oembed-gist
 Description: Embed source from gist.github.
 Author: Takayuki Miyauchi (THETA NETWORKS Co,.Ltd)
-Version: 1.1.0
+Version: 1.2.0
 Author URI: http://firegoby.theta.ne.jp/
 */
 
@@ -44,14 +44,14 @@ class gist {
     {
         load_plugin_textdomain(
             'oembed-gist',
-            PLUGINDIR.'/'.dirname(plugin_basename(__FILE__)).'/langs',
-            dirname(plugin_basename(__FILE__)).'/langs'
+            false,
+            dirname(plugin_basename(__FILE__)).'/languages'
         );
 
         $this->noscript = __('<p>View the code on <a href="https://gist.github.com/%s">Gist</a>.</p>', 'oembed-gist');
         wp_embed_register_handler(
             'gist',
-            '#https://gist.github.com/([0-9]+)(\#file_(.+))?#i',
+            '#https://gist.github.com/([a-zA-Z0-9]+)(\#file_(.+))?$#i',
             array(&$this, 'handler')
         );
         add_shortcode('gist', array(&$this, 'shortcode'));
@@ -68,7 +68,7 @@ class gist {
 
     public function shortcode($p)
     {
-        if (preg_match("/^[0-9]+$/", $p['id'])) {
+        if (preg_match("/^[a-zA-Z0-9]+$/", $p['id'])) {
             $noscript = sprintf($this->noscript, $p['id']);
             if ($p['file']) {
                 return sprintf($this->html, $p['id'], '?file='.$p['file'], $noscript);
