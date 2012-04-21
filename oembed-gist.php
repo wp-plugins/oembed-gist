@@ -1,11 +1,11 @@
 <?php
 /*
-Plugin Name: oEmbed gist
-Plugin URI: http://firegoby.theta.ne.jp/wp/oembed-gist
+Plugin Name: oEmbed Gist
+Plugin URI: http://firegoby.jp/wp/oembed-gist
 Description: Embed source from gist.github.
-Author: Takayuki Miyauchi (THETA NETWORKS Co,.Ltd)
-Version: 1.2.0
-Author URI: http://firegoby.theta.ne.jp/
+Author: Takayuki Miyauchi
+Version: 1.3.0
+Author URI: http://firegoby.jp/
 */
 
 /*
@@ -37,55 +37,54 @@ new gist();
 
 class gist {
 
-    private $noscript;
-    private $html = '<script src="https://gist.github.com/%s.js%s"></script><noscript>%s</noscript>';
+private $noscript;
+private $html = '<script src="https://gist.github.com/%s.js%s"></script><noscript>%s</noscript>';
 
-    function __construct()
-    {
-        load_plugin_textdomain(
-            'oembed-gist',
-            false,
-            dirname(plugin_basename(__FILE__)).'/languages'
+function __construct()
+{
+    add_action('plugins_loaded', array(&$this, 'plugins_loaded'));
+}
+
+public function plugins_loaded()
+{
+    load_plugin_textdomain(
+        'oembed-gist',
+        false,
+        dirname(plugin_basename(__FILE__)).'/languages'
+    );
+
+    wp_embed_register_handler(
+        'gist',
+        '#https://gist.github.com/([a-zA-Z0-9]+)(\#file_(.+))?$#i',
+        array(&$this, 'handler')
+    );
+    add_shortcode('gist', array(&$this, 'shortcode'));
+}
+
+public function handler($m, $attr, $url, $rattr)
+{
+    if (!isset($m[2]) || !isset($m[3]) || !$m[3]) {
+        $m[3] = null;
+    }
+    return '[gist id="'.$m[1].'" file="'.$m[3].'"]';
+}
+
+public function shortcode($p)
+{
+    if (preg_match("/^[a-zA-Z0-9]+$/", $p['id'])) {
+        $noscript = sprintf(
+            __('<p>View the code on <a href="https://gist.github.com/%s">Gist</a>.</p>', 'oembed-gist'),
+            $p['id']
         );
-
-        $this->noscript = __('<p>View the code on <a href="https://gist.github.com/%s">Gist</a>.</p>', 'oembed-gist');
-        wp_embed_register_handler(
-            'gist',
-            '#https://gist.github.com/([a-zA-Z0-9]+)(\#file_(.+))?$#i',
-            array(&$this, 'handler')
-        );
-        add_shortcode('gist', array(&$this, 'shortcode'));
-        add_filter('plugin_row_meta', array(&$this, 'plugin_row_meta'), 10, 2);
-    }
-
-    public function handler($m, $attr, $url, $rattr)
-    {
-        if (!isset($m[2]) || !isset($m[3]) || !$m[3]) {
-            $m[3] = null;
+        if ($p['file']) {
+            return sprintf($this->html, $p['id'], '?file='.$p['file'], $noscript);
+        } else {
+            return sprintf($this->html, $p['id'], '', $noscript);
         }
-        return '[gist id="'.$m[1].'" file="'.$m[3].'"]';
-    }
-
-    public function shortcode($p)
-    {
-        if (preg_match("/^[a-zA-Z0-9]+$/", $p['id'])) {
-            $noscript = sprintf($this->noscript, $p['id']);
-            if ($p['file']) {
-                return sprintf($this->html, $p['id'], '?file='.$p['file'], $noscript);
-            } else {
-                return sprintf($this->html, $p['id'], '', $noscript);
-            }
-        }
-    }
-
-    public function plugin_row_meta($links, $file)
-    {
-        $pname = plugin_basename(__FILE__);
-        if ($pname === $file) {
-            $links[] = '<a href="http://firegoby.theta.ne.jp/pfj/">'.__('Pray for Japan', 'oembed-gist').'</a>';
-        }
-        return $links;
     }
 }
 
-?>
+}
+
+
+// EOF
