@@ -4,7 +4,7 @@ Plugin Name: oEmbed Gist
 Plugin URI: https://github.com/miya0001/oembed-gist
 Description: Embed source from gist.github.
 Author: Takayuki Miyauchi
-Version: 1.7.1
+Version: 1.8.0
 Author URI: http://firegoby.jp/
 */
 
@@ -15,7 +15,7 @@ class gist {
 
 	private $shotcode_tag = 'gist';
 	private $noscript;
-	private $html = '<div class="oembed-gist"><script src="https://gist.github.com/%s.js%s"></script><noscript>%s</noscript></div>';
+	private $regex = '#(https://gist.github.com/([^\/]+\/)?([a-zA-Z0-9]+)(\/[a-zA-Z0-9]+)?)(\#file(\-|_)(.+))?$#i';
 
 	function register()
 	{
@@ -34,7 +34,7 @@ class gist {
 
 		wp_embed_register_handler(
 			'oe-gist',
-			'#https://gist.github.com/([^\/]+\/)?([a-zA-Z0-9]+)(\#file(\-|_)(.+))?$#i',
+			$this->get_gist_regex(),
 			array( $this, 'handler' )
 		 );
 
@@ -71,11 +71,19 @@ class gist {
 		.gist .line,
 		.gist .line-number
 		{
-			height: 1.5em !important;
-			line-height: 1.5em !important;
+			font-size: 12px !important;
+			height: 18px !important;
+			line-height: 18px !important;
+		}
+		.gist .line
+		{
 			white-space: pre !important;
-			overflow: hidden !important;
-			box-sizing: border-box !important;
+			width: auto !important;
+			word-wrap: normal !important;
+		}
+		.gist .line span
+		{
+			word-wrap: normal !important;
 		}
 		</style>
 		<?php
@@ -83,30 +91,47 @@ class gist {
 
 	public function handler( $m, $attr, $url, $rattr )
 	{
-		if ( !isset( $m[3] ) || !isset( $m[5] ) || !$m[5] ) {
-			$m[5] = null;
+		if ( !isset( $m[7] ) || !$m[7] ) {
+			$m[7] = null;
 		}
 
 		return $this->shortcode( array(
-			'id'   => esc_attr( $m[2] ),
-			'file' => esc_attr( $m[5] ),
+			'url'  => $m[1],
+			'id'   => $m[3],
+			'file' => $m[7],
 		) );
 	}
 
 	public function shortcode( $p )
 	{
-		if ( preg_match( "/^[a-zA-Z0-9]+$/", $p['id'] ) ) {
-			$noscript = sprintf(
-				__( 'View the code on <a href="https://gist.github.com/%s">Gist</a>.', 'oembed-gist' ),
-				$p['id']
-			 );
-			if ( isset( $p['file'] ) ) { //RRD: Fixed line 79 error by adding isset()
-				$file = preg_replace( '/[\-\.]([a-z]+)$/', '.\1', $p['file'] );
-				return sprintf( $this->html, $p['id'], '?file='.$file, $noscript );
-			} else {
-				return sprintf( $this->html, $p['id'], '', $noscript );
-			}
+		if ( isset( $p['url'] ) && $p['url'] ) {
+			$url = $p['url'];
+		} elseif ( preg_match( "/^[a-zA-Z0-9]+$/", $p['id'] ) ) {
+			$url = 'https://gist.github.com/' . $p['id'];
 		}
+
+		$noscript = sprintf(
+			__( 'View the code on <a href="%s">Gist</a>.', 'oembed-gist' ),
+			esc_url( $url )
+		);
+
+		$url = $url . '.js';
+
+		if ( isset( $p['file'] ) && $p['file'] ) { //RRD: Fixed line 79 error by adding isset()
+			$file = preg_replace( '/[\-\.]([a-z]+)$/', '.\1', $p['file'] );
+			$url = $url . '?file=' . $file;
+		}
+
+		return sprintf(
+			'<div class="oembed-gist"><script src="%s"></script><noscript>%s</noscript></div>',
+			$url,
+			$noscript
+		);
+	}
+
+	public function get_gist_regex()
+	{
+		return $this->regex;
 	}
 
 	private function get_shortcode_tag()
