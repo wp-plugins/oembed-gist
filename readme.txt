@@ -1,25 +1,25 @@
 === oEmbed Gist ===
 Contributors: miyauchi
 Tags: url, link, oembed, visual editor, post, gist, github
-Requires at least: 3.5.2
-Tested up to: 4.0
-Stable tag: 1.6.1
+Requires at least: 4.0
+Tested up to: 4.3
+Stable tag: 1.8.1
 
 Embed your source from gist into WordPress easily.
 
 == Description ==
 
 * Embed your source from gist into WordPress easily.
-* You simply paste URL of your Gist.
+* You simply have to paste the URL of your Gist.
+* You can embed a specific revision of the Gist.
+* You can embed an individual file that is part of a multi-file Gist.
 
 = Summary =
 
-You can embed your program sources from gist simply paste URL like below.
+You can embed your program sources from gist by simply pasting the URL like below.
 
 * https://gist.github.com/973153
 * https://gist.github.com/973153#file_select_media.html
-
-PHP5 is required!
 
 = Support =
 
@@ -29,9 +29,9 @@ PHP5 is required!
 
 == Installation ==
 
-* A plug-in installation screen is displayed on the WordPress admin panel.
+* A plugin installation screen is displayed on the WordPress admin panel.
 * It installs it in `wp-content/plugins`.
-* The plug-in is made effective.
+* The plugin is made effective.
 
 
 == Screenshots ==
@@ -42,7 +42,19 @@ PHP5 is required!
 
 == Changelog ==
 
-* 1.6.1
+= 1.8.1 =
+* Tested on WordPress 4.3
+
+= 1.8.0 =
+
+* Fix responsive css.
+* Add feature embedding gist's revision.
+
+= 1.7.0 =
+
+* Fix css styles for twentyfifteen.
+
+= 1.6.1 =
 * Tested up to 4.0
 
 = 1.6.0 =
@@ -65,13 +77,3 @@ PHP5 is required!
 
 = 0.1.0 =
 * The first release.
-
-== Credits ==
-
-This plug-in is not guaranteed though the user of WordPress can freely use this plug-in free of charge regardless of the purpose.
-The author must acknowledge the thing that the operation guarantee and the support in this plug-in use are not done at all beforehand.
-
-== Contact ==
-
-* email to miya[at]theta.ne.jp
-* twitter @miya0001
